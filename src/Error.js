@@ -1,8 +1,8 @@
 /*
- *    This file is part of BEII
+ *    This file is part of BEII-core
  *    Copyright (C) 2017  Pablo González Suárez, Miguel Reboiro Jato and Pablo Vega Villaamil
  *
- *    BEII is free software: you can redistribute it and/or modify
+ *    BEII-core is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
  *    the Free Software Foundation, either version 3 of the License, or
  *    (at your option) any later version.
@@ -42,7 +42,7 @@ export default class BEIIError {
 
     printToUser(){
         switch(this.type){
-            case BEIIError.types.ROUTE_NOT_FOUND: {
+            case BEII.types.ROUTE_NOT_FOUND: {
                 return I18n.t('ROUTE_NOT_FOUND')
             }
             default: {
