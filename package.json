@@ -1,0 +1,14 @@
+{
+  "name": "beii-core",
+  "version": "1.0.0",
+  "description": "Core APIs for BEII and BEII Admin",
+  "main": "index.js",
+  "repository": "https://dev.sing-group.org/gitlab/eii/beii-core.git",
+  "author": "pgsuarez",
+  "license": "GNU GPLv3",
+  "dependencies": {
+		"flow-bin": "0.37.0",
+		"geojson": "^0.4.1",
+		"moment": "^2.17.1"
+	}
+}
