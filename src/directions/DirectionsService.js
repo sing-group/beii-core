@@ -18,7 +18,7 @@
 
  // @flow
 
-import {accessToken} from '../../config'
+import {accessToken} from '../config'
 
 import {Route} from './'
 import {Position} from '../location'

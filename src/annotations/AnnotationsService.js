@@ -24,7 +24,7 @@ import {Position} from '../location'
 
 import {Annotation} from './'
 
-import Palette from '../../Palette'
+import Palette from '../Palette'
 
 export default class AnnotationsService {
 

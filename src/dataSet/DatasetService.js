@@ -21,7 +21,7 @@
 import { 
     accessToken,
     mapboxStudioUsername
-} from '../../config'
+} from '../config'
 
 import GeoJSON from 'geojson'
 
