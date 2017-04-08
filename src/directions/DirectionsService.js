@@ -18,7 +18,8 @@
 
  // @flow
 
-import {accessToken} from '../config'
+import Config from '../Config'
+const { accessToken, } = Config
 
 import {Route} from './'
 import {Position} from '../location'

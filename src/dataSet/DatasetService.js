@@ -18,10 +18,11 @@
 
  // @flow
 
-import { 
+import Config from '../Config'
+const { 
     accessToken,
     mapboxStudioUsername
-} from '../config'
+} = Config
 
 import GeoJSON from 'geojson'
 

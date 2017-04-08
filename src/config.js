@@ -18,6 +18,8 @@
 
  // @flow
 
+export default class Config {
+
 /** The used access token must have, at least, the following scopes:
  * styles:tiles
  * styles:read
@@ -27,5 +29,6 @@
  * 
  * More info here: https://www.mapbox.com/api-documentation/#access-tokens
  */
-export const accessToken = 'insert_your_token_here'
-export const mapboxStudioUsername = 'insert_your_username_here'
+ static accessToken = ''
+ static mapboxStudioUsername = ''
+}
