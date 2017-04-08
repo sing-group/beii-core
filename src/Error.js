@@ -18,8 +18,6 @@
 
  // @flow
 
-import I18n from 'react-native-i18n'
-
 export default class BEIIError {
 
     static types = {
@@ -40,10 +38,13 @@ export default class BEIIError {
         this.stack = (new Error()).stack
     }
 
-    printToUser(){
+    printToUser(language = 'en'){
+        if (translations[language] == null) {
+            return "No such language: " + language
+        }
         switch(this.type){
             case BEII.types.ROUTE_NOT_FOUND: {
-                return I18n.t('ROUTE_NOT_FOUND')
+                return translations[language]['ROUTE_NOT_FOUND']
             }
             default: {
                 return ""
@@ -52,20 +53,14 @@ export default class BEIIError {
     }
 }
 
-// Enable fallbacks if you want `en-US` and `en-GB` to fallback to `en`
-I18n.fallbacks = true
-
-I18n.translations = {
+const translations = {
   en: {
-    ...I18n.translations.en,
     ROUTE_NOT_FOUND: 'Sorry, no route was found',
   },
   es: {
-    ...I18n.translations.es,
     ROUTE_NOT_FOUND: 'Lo sentimos, no se ha encontrado ninguna ruta',
   },
   gl: {
-    ...I18n.translations.gl,
     ROUTE_NOT_FOUND: 'Sentímolo, non se atopou ningunha ruta',
   }
 }
