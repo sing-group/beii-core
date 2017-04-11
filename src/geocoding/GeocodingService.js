@@ -19,7 +19,6 @@
 // @flow
 
 import Config from '../Config'
-const { accessToken: aT } = Config
 
 import {Position} from '../location'
 
@@ -31,7 +30,7 @@ export default class GeocodingService {
                   {
                     endpoint = 'https://api.tiles.mapbox.com',
                     source = 'mapbox.places',
-                    accessToken = aT,
+                    accessToken = Config.accessToken,
                     proximity = '',
                     bbox = '',
                     types = '',

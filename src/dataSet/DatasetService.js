@@ -19,10 +19,6 @@
  // @flow
 
 import Config from '../Config'
-const { 
-    accessToken,
-    mapboxStudioUsername
-} = Config
 
 import GeoJSON from 'geojson'
 
@@ -49,7 +45,7 @@ export default class DatasetService {
             return dataset
         }
 
-        const r = await fetch(`https://api.mapbox.com/datasets/v1/${mapboxStudioUsername}/${datasetId}?access_token=${accessToken}`)
+        const r = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}/${datasetId}?access_token=${Config.accessToken}`)
         const datasetInfo = await r.json()
         if (datasetInfo.message != null){
             throw new Error('Could not retrieve dataset: ' + datasetInfo.message, Error.types.DATASET_NOT_FOUND)
@@ -57,7 +53,7 @@ export default class DatasetService {
         const datasetBoundingBox = datasetInfo.bounds
         const datasetName = datasetInfo.name
 
-        const response = await fetch(`https://api.mapbox.com/datasets/v1/${mapboxStudioUsername}/${datasetId}/features?access_token=${accessToken}`)
+        const response = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}/${datasetId}/features?access_token=${Config.accessToken}`)
         const featuresCollection = await response.json()
         if (featuresCollection.message != null){
             throw new Error('Could not retrieve dataset: ' + featuresCollection.message, Error.types.DATASET_NOT_FOUND)
@@ -83,7 +79,7 @@ export default class DatasetService {
     }
 
     static async getDatasets(): Promise<Dataset[]>|Dataset[]{
-        const r = await fetch(`https://api.mapbox.com/datasets/v1/${mapboxStudioUsername}?access_token=${accessToken}`)
+        const r = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}?access_token=${Config.accessToken}`)
         const datasetList = await r.json()
         if (datasetList.message != null){
             console.log("aqui",datasetList)
@@ -165,4 +161,4 @@ export default class DatasetService {
 
 }
 
-DatasetService.getDatasets()
+// DatasetService.getDatasets()

@@ -19,7 +19,6 @@
  // @flow
 
 import Config from '../Config'
-const { accessToken, } = Config
 
 import {Route} from './'
 import {Position} from '../location'
@@ -40,14 +39,14 @@ export default class DirectionsService {
 
         let coords = origin.longitude + ',' + origin.latitude + ';' + destination.longitude + ',' + destination.latitude
         
-        let routeResponse = await fetch(`https://api.mapbox.com/directions/v5/mapbox/${transportMode}/${coords}?geometries=geojson&access_token=${accessToken}`)
+        let routeResponse = await fetch(`https://api.mapbox.com/directions/v5/mapbox/${transportMode}/${coords}?geometries=geojson&access_token=${Config.accessToken}`)
         let route = await routeResponse.json()
         while (route.message != null && destinationIndex < orderedDestinations.length){
             destinationIndex+=1
             destination = orderedDestinations[destinationIndex]
             coords = origin.longitude + ',' + origin.latitude + ';' + destination.longitude + ',' + destination.latitude
             console.log("An error occurred, re-routing to next local")
-            routeResponse = await fetch(`https://api.mapbox.com/directions/v5/mapbox/${transportMode}/${coords}?geometries=geojson&access_token=${accessToken}`)
+            routeResponse = await fetch(`https://api.mapbox.com/directions/v5/mapbox/${transportMode}/${coords}?geometries=geojson&access_token=${Config.accessToken}`)
             route = await routeResponse.json()
         }
         if (route.message != null){
