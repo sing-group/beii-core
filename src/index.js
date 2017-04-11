@@ -18,11 +18,20 @@
 
  // @flow
 
-export * from './annotations'
-export * from './dataSet'
-export * from './directions'
-export * from './distances'
-export * from './geocoding'
-export * from './location'
-export * from './Error'
-export * from './Config'
+import AnnotationsService, {Annotation} from './annotations'
+import DatasetService, {Dataset, Local} from './dataSet'
+import DirectionsService, {Route} from './directions'
+import DistancesService from './distances'
+import GeocodingService from './geocoding'
+import LocationService, {Location} from './location'
+import Error from './Error'
+import Config from './Config'
+
+export {AnnotationsService, Annotation}
+export {DatasetService, Dataset, Local}
+export {DirectionsService, Route}
+export {DistancesService}
+export {GeocodingService}
+export {LocationService, Location}
+export {Error}
+export default Config
