@@ -1,3 +1,10 @@
 {
-  "presets": ["react-native"],
+    "passPerPreset": true,
+    "presets": [
+        { "plugins": [ "transform-runtime" ] },
+        {
+            "passPerPreset": false,
+            "presets": [ "react-native" ]
+        }
+    ]
 }
