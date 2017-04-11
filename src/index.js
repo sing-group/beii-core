@@ -25,5 +25,4 @@ export * from './distances'
 export * from './geocoding'
 export * from './location'
 export * from './Error'
-import Config from './Config'
-export default Config
+export * from './Config'
