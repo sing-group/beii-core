@@ -18,6 +18,8 @@
 
  // @flow
 
+import DatasetService from './dataSet'
+
 export default class Config {
 
 /** The used access token must have, at least, the following scopes:
@@ -31,4 +33,8 @@ export default class Config {
  */
  static accessToken = ''
  static mapboxStudioUsername = ''
+
+ static async init(){
+    return DatasetService.getDatasets()
+ }
 }
