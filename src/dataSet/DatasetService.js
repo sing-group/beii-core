@@ -31,17 +31,21 @@ export default class DatasetService {
 
     static datasets: Dataset[] = []
 
-    static async getDataset(datasetId): Promise<Dataset>|Dataset{
+    static async getDataset(datasetId, forceUpdate = false): Promise<Dataset>|Dataset{
         if (datasetId == null){
             const userPosition = await LocationService.getLocation()
             const currentDataset = DatasetService.datasets.find(d => d.contains(userPosition))
             if (currentDataset == null){
                 throw new Error("There are no available locals in your area.", Error.types.DATASET_NOT_FOUND)
             }
-            return currentDataset
+            if (forceUpdate){
+                datasetId = currentDataset.id
+            } else {
+                return currentDataset
+            }
         }
         let dataset = DatasetService.datasets.find( d => d.id === datasetId)
-        if (dataset != null){
+        if (dataset != null && !forceUpdate){
             return dataset
         }
 
@@ -71,23 +75,27 @@ export default class DatasetService {
         })
         dataset = new Dataset(datasetId, locals, datasetName, datasetBoundingBox, datasetDesc)
         let foundDataset = null
-        if (foundDataset = DatasetService.datasets.find( d => d.id === datasetId)){
+        if (!forceUpdate && (foundDataset = DatasetService.datasets.find( d => d.id === datasetId))){
             return foundDataset
         } else {
+            DatasetService.datasets = DatasetService.datasets.filter(d => d.id !== datasetId)
             DatasetService.datasets.push(dataset)
             return dataset
         }
     }
 
-    static async getDatasets(): Promise<Dataset[]>|Dataset[]{
+    static async getDatasets(forceUpdate = false): Promise<Dataset[]>|Dataset[]{
         const r = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}?access_token=${Config.accessToken}`)
         const datasetList = await r.json()
         if (datasetList.message != null){
-            console.log("aqui",datasetList)
             throw new Error('Could not retrieve the list of datasets: ' + datasetList.message, Error.types.GENERAL)
         }
+        
+        if (forceUpdate){
+            DatasetService.datasets = DatasetService.datasets.filter(d => datasetList.some(dd => dd.id === d.id))
+        }
 
-        return Promise.all(datasetList.map(dataset => DatasetService.getDataset(dataset.id)))
+        return Promise.all(datasetList.map(dataset => DatasetService.getDataset(dataset.id, forceUpdate)))
     }
 
     static getBoundingBox(){
@@ -161,5 +169,3 @@ export default class DatasetService {
     }
 
 }
-
-// DatasetService.getDatasets()
