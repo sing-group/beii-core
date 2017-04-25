@@ -18,6 +18,9 @@
 
  // @flow
 
+import moment from 'moment'
+require('moment/locale/es')
+
 import AnnotationsService, {Annotation} from './annotations'
 import DatasetService, {Dataset, Local} from './dataSet'
 import DirectionsService, {Route} from './directions'
