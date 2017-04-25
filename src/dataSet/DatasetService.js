@@ -52,6 +52,7 @@ export default class DatasetService {
         }
         const datasetBoundingBox = datasetInfo.bounds
         const datasetName = datasetInfo.name
+        const datasetDesc = datasetInfo.description || ''
 
         const response = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}/${datasetId}/features?access_token=${Config.accessToken}`)
         const featuresCollection = await response.json()
@@ -68,7 +69,7 @@ export default class DatasetService {
                              v.properties.address,
                              v.id)
         })
-        dataset = new Dataset(datasetId, locals, datasetName, datasetBoundingBox)
+        dataset = new Dataset(datasetId, locals, datasetName, datasetBoundingBox, datasetDesc)
         let foundDataset = null
         if (foundDataset = DatasetService.datasets.find( d => d.id === datasetId)){
             return foundDataset
