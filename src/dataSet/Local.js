@@ -93,11 +93,11 @@ export default class Local {
     
     getOpeningTime(schedule: string, date = moment()){
         const opening = moment(schedule.split('-')[0], 'HH:mm')
-        return date.hours(opening.hours()).minutes(opening.minutes())
+        return date.clone().hours(opening.hours()).minutes(opening.minutes())
     }
     
     getClosingTime(schedule: string, date = moment()){
         const closing = moment(schedule.split('-')[1], 'HH:mm')
-        return date.hours(closing.hours()).minutes(closing.minutes())
+        return date.clone().hours(closing.hours()).minutes(closing.minutes())
     }
 }
