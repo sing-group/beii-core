@@ -54,4 +54,8 @@ export default class Dataset {
     getLocal(id){
         return this.locals.find( l => l.id === id )
     }
+
+    clone(){
+        return new Dataset(this.id, this.locals.map(l => l.clone()), this.name, this.boundingBox, this.description)
+    }
 }
