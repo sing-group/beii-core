@@ -100,4 +100,8 @@ export default class Local {
         const closing = moment(schedule.split('-')[1], 'HH:mm')
         return date.clone().hours(closing.hours()).minutes(closing.minutes())
     }
+
+    clone(){
+        return new Local(this.latitude, this.longitude, this.name, this.description, this.schedule, this.address, this.id)
+    }
 }

@@ -27,13 +27,15 @@ export default class Dataset {
     id: string = "";
     locals: Local[] = []
     name: string = ""
+    description: string = "";
     boundingBox: number[] = []
 
-    constructor (id: string, locals: Local[], name: string, boundingBox: number[]){
+    constructor (id: string, locals: Local[], name: string, boundingBox: number[], desc: string = ''){
         this.id = id
         this.locals = locals
         this.name = name
         this.boundingBox = boundingBox
+        this.description = desc
     }
 
     contains(position: Position){
@@ -46,10 +48,14 @@ export default class Dataset {
     }
 
     filterByOpen(time = moment()){
-        return new Dataset(this.id+'-OPEN', this.locals.filter( l => l.isOpenAt(time)), this.name, this.boundingBox)
+        return new Dataset(this.id+'-OPEN', this.locals.filter( l => l.isOpenAt(time)), this.name, this.boundingBox, this.description)
     }
 
     getLocal(id){
         return this.locals.find( l => l.id === id )
+    }
+
+    clone(){
+        return new Dataset(this.id, this.locals.map(l => l.clone()), this.name, this.boundingBox, this.description)
     }
 }

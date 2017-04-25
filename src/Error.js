@@ -26,6 +26,9 @@ export default class BEIIError {
         ROUTE_NOT_FOUND: 'ROUTE_NOT_FOUND',
         DATASET_NOT_FOUND: 'DATASET_NOT_FOUND',
         DISTANCES_NOT_CALCULATED: 'DISTANCES_NOT_CALCULATED',
+        DELETION_ERROR: 'DELETION_ERROR',
+        SAVE_DATASET_ERROR: 'SAVE_DATASET_ERROR',
+        SAVE_LOCAL_ERROR: 'SAVE_LOCAL_ERROR',
     }
 
     type = null
@@ -46,6 +49,15 @@ export default class BEIIError {
             case BEII.types.ROUTE_NOT_FOUND: {
                 return translations[language]['ROUTE_NOT_FOUND']
             }
+            case BEII.types.DELETION_ERROR: {
+                return translations[language]['DELETION_ERROR']
+            }
+            case BEII.types.SAVE_DATASET_ERROR: {
+                return translations[language]['SAVE_DATASET_ERROR']
+            }
+            case BEII.types.SAVE_LOCAL_ERROR: {
+                return translations[language]['SAVE_LOCAL_ERROR']
+            }
             default: {
                 return ""
             }
@@ -56,11 +68,20 @@ export default class BEIIError {
 const translations = {
   en: {
     ROUTE_NOT_FOUND: 'Sorry, no route was found',
+    DELETION_ERROR: 'An error has occurred',
+    SAVE_DATASET_ERROR: 'Could not save the region',
+    SAVE_LOCAL_ERROR: 'Could not save the local',
   },
   es: {
     ROUTE_NOT_FOUND: 'Lo sentimos, no se ha encontrado ninguna ruta',
+    DELETION_ERROR: 'Ha habido un error',
+    SAVE_DATASET_ERROR: 'No se pudo guardar la región',
+    SAVE_LOCAL_ERROR: 'No se pudo guardar el local',
   },
   gl: {
     ROUTE_NOT_FOUND: 'Sentímolo, non se atopou ningunha ruta',
+    DELETION_ERROR: 'Houbo un erro',
+    SAVE_DATASET_ERROR: 'Non se puido gardala rexión',
+    SAVE_LOCAL_ERROR: 'Non se puido gardar o local',
   }
 }
