@@ -20,6 +20,7 @@
 
 import moment from 'moment'
 
+import {Schedule} from './'
 import {Position} from '../location'
 
 export default class Local {
@@ -28,11 +29,11 @@ export default class Local {
     longitude: number = 0
     name: string = ""
     description: string = ""
-    schedule: string|string[] = ""
+    schedule: Schedule[] = []
     address: string = ""
     id: string = ""
 
-    constructor(lat: number, lon: number, name: string, desc: string, sch: string|string[], addr: string, id: string){
+    constructor(lat: number, lon: number, name: string, desc: string, sch: Schedule[], addr: string, id: string){
         this.latitude = lat
         this.longitude = lon
         this.name = name
@@ -46,62 +47,21 @@ export default class Local {
         return new Position(this.latitude, this.longitude)
     }
 
+    getScheduleAt(date = moment(), forceReturnSchedule = true){
+        return this.schedule.getScheduleAt(date, forceReturnSchedule)
+    }
+
     isOpenAt(date = moment()): boolean {
-        const schedule = this.getOpenHoursAt(date)
+        const schedule = this.schedule.getScheduleAt(date, false)
 
         if(schedule == null){
             return false
-        }
-
-        const openingTime = this.getOpeningTime(schedule, date)
-        const closingTime = this.getClosingTime(schedule, date)
-
-        let boundary = date.clone().hours(6).minutes(0)
-        if (date.isAfter(boundary)){
-            if (closingTime.isBefore(openingTime)){
-                closingTime.add(1, 'days')
-            }
         } else {
-            if (closingTime.isBefore(openingTime)){
-                openingTime.subtract(1, 'days')
-            }
+            return schedule.isOpenAt(date)
         }
-
-        return date.isBetween(openingTime, closingTime, null, '[]')
-    }
-
-    getOpenHoursAt(date = moment()): string {
-        if (Array.isArray(this.schedule)){
-            let boundary = date.clone().hours(6).minutes(0)
-            if (date.isAfter(boundary)){
-                return this.schedule[date.weekday()]
-            } else {
-                return this.schedule[boundary.subtract(1, 'days').weekday()]
-            }
-        } else {
-            return this.schedule
-        }
-    }
-
-    getUsualHours(): string {
-        if (Array.isArray(this.schedule)){
-            return null
-        } else {
-            return this.schedule
-        }
-    }
-    
-    getOpeningTime(schedule: string, date = moment()){
-        const opening = moment(schedule.split('-')[0], 'HH:mm')
-        return date.clone().hours(opening.hours()).minutes(opening.minutes())
-    }
-    
-    getClosingTime(schedule: string, date = moment()){
-        const closing = moment(schedule.split('-')[1], 'HH:mm')
-        return date.clone().hours(closing.hours()).minutes(closing.minutes())
     }
 
     clone(){
-        return new Local(this.latitude, this.longitude, this.name, this.description, this.schedule, this.address, this.id)
+        return new Local(this.latitude, this.longitude, this.name, this.description, this.schedule.clone(), this.address, this.id)
     }
 }

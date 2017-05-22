@@ -1,5 +1,5 @@
 /*
- *    This file is part of BEII-core
+ *    This file is part of BEII
  *    Copyright (C) 2017  Pablo González Suárez, Miguel Reboiro Jato and Pablo Vega Villaamil
  *
  *    BEII is free software: you can redistribute it and/or modify
@@ -19,22 +19,28 @@
  // @flow
 
 import moment from 'moment'
-require('moment/locale/es')
 
-import AnnotationsService, {Annotation} from './annotations'
-import DatasetService, {Dataset, Local, ComplexSchedule, Schedule, ExceptionalDay} from './dataSet'
-import DirectionsService, {Route} from './directions'
-import DistancesService from './distances'
-import GeocodingService from './geocoding'
-import LocationService, {Location} from './location'
-import Error from './Error'
-import Config from './Config'
+export default class ExceptionalDay {
 
-export {AnnotationsService, Annotation}
-export {DatasetService, Dataset, Local, ComplexSchedule, Schedule, ExceptionalDay}
-export {DirectionsService, Route}
-export {DistancesService}
-export {GeocodingService}
-export {LocationService, Location}
-export {Error}
-export default Config
+    name = ''
+    date = null
+    openRanges = []
+
+    constructor(date, openRanges=[], name=''){
+        this.name = name
+        if(typeof date === 'string'){
+            this.date = moment(date)
+        } else {
+            this.date = date
+        }
+        if (openRanges.some(([open, close]) =>
+                            moment(open, 'HH:mm').isSameOrAfter(moment(close, 'HH:mm'), 'minutes'))){
+            throw new Error('Invalid exceptional day')
+        }
+        this.openRanges = openRanges
+    }
+
+    clone(){
+        return new ExceptionalDay(this.date.clone(), JSON.parse(JSON.stringify(this.openRanges)), this.name)
+    }
+}

@@ -21,6 +21,9 @@
 import DatasetService from './DatasetService'
 import Dataset from './Dataset'
 import Local from './Local'
+import ComplexSchedule from './ComplexSchedule'
+import Schedule from './Schedule'
+import ExceptionalDay from './ExceptionalDay'
 
 export default DatasetService
-export { Dataset, Local }
+export { Dataset, Local, ComplexSchedule, Schedule, ExceptionalDay }
