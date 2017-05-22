@@ -21,17 +21,18 @@
 import Config from '../Config'
 
 import GeoJSON from 'geojson'
+import moment from 'moment'
 
-import {Dataset, Local} from './'
+import {Dataset, Local, ComplexSchedule, Schedule, ExceptionalDay} from './'
 import LocationService, {Position} from '../location'
 
 import Error from '../Error'
 
 export default class DatasetService {
 
-    static datasets: Dataset[] = []
+    static datasets= []
 
-    static async getDataset(datasetId, forceUpdate = false): Promise<Dataset>|Dataset{
+    static async getDataset(datasetId, forceUpdate = false){
         if (datasetId == null){
             const userPosition = await LocationService.getLocation()
             const currentDataset = DatasetService.datasets.find(d => d.contains(userPosition))
@@ -54,6 +55,7 @@ export default class DatasetService {
         if (datasetInfo.message != null){
             throw new Error('Could not retrieve dataset: ' + datasetInfo.message, Error.types.DATASET_NOT_FOUND)
         }
+        
         const datasetBoundingBox = datasetInfo.bounds
         const datasetName = datasetInfo.name
         const datasetDesc = datasetInfo.description || ''
@@ -63,13 +65,16 @@ export default class DatasetService {
         if (featuresCollection.message != null){
             throw new Error('Could not retrieve dataset: ' + featuresCollection.message, Error.types.DATASET_NOT_FOUND)
         }
-        
+
         const locals = featuresCollection.features.map( (v, i, a) => {
+            const schedules = v.properties.schedule.schedules.map(sch => new Schedule(sch.start, sch.end, sch.schedule, sch.name))
+            const exceptions = v.properties.schedule.exceptions.map(e => new ExceptionalDay(e.date, e.openRanges, e.name))
+            const schedule = new ComplexSchedule(schedules, exceptions)
             return new Local(v.geometry.coordinates[1],
                              v.geometry.coordinates[0],
                              v.properties.name,
                              v.properties.description,
-                             v.properties.schedule,
+                             schedule,
                              v.properties.address,
                              v.id)
         })
@@ -84,17 +89,17 @@ export default class DatasetService {
         }
     }
 
-    static async getDatasets(forceUpdate = false): Promise<Dataset[]>|Dataset[]{
+    static async getDatasets(forceUpdate = false){
         const r = await fetch(`https://api.mapbox.com/datasets/v1/${Config.mapboxStudioUsername}?access_token=${Config.accessToken}`)
         const datasetList = await r.json()
         if (datasetList.message != null){
             throw new Error('Could not retrieve the list of datasets: ' + datasetList.message, Error.types.GENERAL)
         }
-        
+
         if (forceUpdate){
             DatasetService.datasets = DatasetService.datasets.filter(d => datasetList.some(dd => dd.id === d.id))
         }
-
+        
         return Promise.all(datasetList.map(dataset => DatasetService.getDataset(dataset.id, forceUpdate)))
     }
 
@@ -113,32 +118,55 @@ export default class DatasetService {
             return Math.random() * (max - min) + min;
         }
 
-        function getRandomSchedule() {
-            const op = Math.floor(Math.random() * 4)
+        function getRandomDaySchedule(withNull = true) {
+            const op = Math.floor(Math.random() * (withNull? 3: 2))
             switch (op) {
                 case 0:
-                    return "15:00-3:00"
+                    return [["8:00","13:00"], ["16:00","22:00"]]
                 case 1:
-                    return "9:00-21:00"
+                    return [["9:00","21:00"]]
                 case 2:
+                    return []
+            }
+        }
+
+        function getRandomWeekSchedule() {
+            const op = Math.floor(Math.random() * 10)
+            if(op <= 1){
+                const sch = getRandomDaySchedule(false)
+                return op?
+                    [[], [], sch, sch, sch, sch, sch,]
+                    : [sch, sch, sch, sch, sch, [], [],]
+            }
+            return [0,1,2,3,4,5,6].map(day => getRandomDaySchedule())
+        }
+        
+        function getRandomSchedule() {
+            const op = Math.floor(Math.random() * 2)
+            switch (op) {
+                case 0:
+                    return [new Schedule(
+                                    moment().subtract(1, 'days').startOf('day'),
+                                    null,
+                                    getRandomWeekSchedule(),
+                                    [],
+                                    'Default schedule')]
+                case 1:
+                case 2:
+                    const changeOfSch = moment().add(2, 'months').endOf('month')
                     return [
-                        null,
-                        "9:00-15:00",
-                        "10:30-22:00",
-                        "10:30-22:00",
-                        "10:30-22:00",
-                        "9:00-18:00",
-                        null,
-                    ]
-                case 3:
-                    return [
-                        "11:15-18:00",
-                        "10:00-20:00",
-                        "10:00-20:00",
-                        "10:00-20:00",
-                        "10:00-20:00",
-                        "14:00-00:00",
-                        "12:00-21:30",
+                        new Schedule(
+                                moment().subtract(1, 'days').startOf('day'),
+                                changeOfSch,
+                                getRandomWeekSchedule(),
+                                [],
+                                'Holidays'),
+                        new Schedule(
+                                changeOfSch.clone().add(1, 'milliseconds'),
+                                null,
+                                getRandomWeekSchedule(),
+                                [],
+                                'Default schedule'),
                     ]
             }
         }
@@ -167,5 +195,4 @@ export default class DatasetService {
         console.log(JSON.stringify(geojson, null, 2))
         return geojson
     }
-
 }
