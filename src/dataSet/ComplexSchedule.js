@@ -21,23 +21,6 @@
 import moment from 'moment'
 import Schedule from './Schedule'
 
-/**
- * ComplexSchedule shape
- *
- * start: date when this schedule takes effect (inclusive)
- * end: date when this schedule stops taking effect (inclusive)
- *
- * Week-lenght schedule
- * week = [
- *  x7 day-lenght schedule
- *  [
- *      [ openingTime, closingTime ], Single period within a day
- *      ...
- *  ],
- *  ...
- * ]
- */
-
 export default class ComplexSchedule {
 
     schedules = []
