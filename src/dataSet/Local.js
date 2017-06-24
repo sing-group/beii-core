@@ -47,12 +47,12 @@ export default class Local {
         return new Position(this.latitude, this.longitude)
     }
 
-    getScheduleAt(date = moment(), forceReturnSchedule = true){
-        return this.schedule.getScheduleAt(date, forceReturnSchedule)
+    getScheduleAt(date = moment()){
+        return this.schedule.getScheduleAt(date)
     }
 
     isOpenAt(date = moment()): boolean {
-        const schedule = this.schedule.getScheduleAt(date, false)
+        const schedule = this.schedule.getScheduleAt(date)
 
         if(schedule == null){
             return false

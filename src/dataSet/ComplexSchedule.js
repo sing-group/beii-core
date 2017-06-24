@@ -35,7 +35,7 @@ export default class ComplexSchedule {
     getMainSchedule(){
         const mainSchedule = this.schedules
                                     .find((sch) =>
-                                            sch.isMainSchedule() == true)
+                                            sch.isMainSchedule() === true)
         if (mainSchedule != null){
             return mainSchedule
         } else {
@@ -43,17 +43,13 @@ export default class ComplexSchedule {
         }
     }
 
-    getScheduleAt(date = moment(), forceReturnSchedule = true){
+    getScheduleAt(date = moment()){
         const weekExceptions = this.getExceptionalDaysAtWeekOf(date)
         let schedule = this.schedules
                                 .find(sch =>
                                         sch.isMainSchedule() === false && sch.takesEffectAt(date))
         if(schedule == null){
-            if (forceReturnSchedule == true){
-                schedule = this.getMainSchedule()
-            } else {
-                return null
-            }
+            schedule = this.getMainSchedule()
         }
 
         if (schedule == null){
